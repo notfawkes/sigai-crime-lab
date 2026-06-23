@@ -8,11 +8,10 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fallback timer to ensure loading screen goes away even if the video fails to load/play
   useEffect(() => {
     const fallbackTimer = setTimeout(() => {
       setIsLoading(false);
-    }, 10000); // 10s fallback
+    }, 10000);
 
     return () => clearTimeout(fallbackTimer);
   }, []);

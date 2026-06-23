@@ -428,7 +428,7 @@ export default function Round2() {
                   disabled:bg-zinc-600
                 "
               >
-                {isSaving ? "Saving Score..." : "Move To Round 3"}
+                {isSaving ? "Saving Score..." : "Move To Round 2"}
               </button>
               {saveError && (
                 <p className="mt-4 text-sm text-red-300">{saveError}</p>

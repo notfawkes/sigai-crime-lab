@@ -120,7 +120,7 @@ export function AudioPlayer() {
         className="
           fixed
           top-4
-          right-4
+          right-16
           z-[250]
           flex
           h-10

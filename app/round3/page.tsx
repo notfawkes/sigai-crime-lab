@@ -237,7 +237,7 @@ export default function Round3() {
           <div className="w-full max-w-6xl mx-auto flex justify-between items-center border-b border-zinc-800 pb-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#d01f5b] font-mono">
-                Round 3
+                Round 2
               </p>
               <h1 
                 className="text-5xl leading-none font-bold text-white mt-1"
