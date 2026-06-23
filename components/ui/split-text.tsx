@@ -93,7 +93,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       const start = `top ${startPct}%${sign}`;
 
       const triggerKeywordHighlight = (container: HTMLElement, startDelay: number) => {
-        const keywords = ['chimera', 'labs', 'arjun', 'mehta', 'dead', 'killed', 'police', 'detective'];
+        const keywords = ['chimera', 'labs', 'arjun', 'mehta', 'presence', 'crime', 'dead', 'killed', 'police', 'detective', 'sarah', 'khan', 'good', 'luck'];
         const highlights: Element[] = [];
         const wordElements = container.querySelectorAll('.split-word');
         

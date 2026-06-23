@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/AuthGuard";
 import { getCurrentUser } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
+import { motion, AnimatePresence } from "framer-motion";
+import { AlertTriangle, X } from "lucide-react";
 
 type Clue = {
   id: number;
@@ -24,6 +26,8 @@ export default function Round4() {
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [foundClues, setFoundClues] = useState<Clue[]>([]);
   const [accusedSuspects, setAccusedSuspects] = useState<Suspect[]>([]);
@@ -56,11 +60,15 @@ export default function Round4() {
     const trimmedAnswer = answer.trim();
 
     if (!trimmedAnswer) {
-      setMessage("Please write your investigation paragraph before submitting.");
+      setIsShaking(true);
+      setShowAlert(true);
+      setMessage("Please write your report before submitting.");
+      setTimeout(() => setIsShaking(false), 500);
       return;
     }
 
     setIsSaving(true);
+    setShowAlert(false);
     setMessage("");
 
     try {
@@ -90,6 +98,7 @@ export default function Round4() {
           ? error.message
           : "Unable to save your Round 4 report.",
       );
+      setShowAlert(true);
     } finally {
       setIsSaving(false);
     }
@@ -177,24 +186,68 @@ export default function Round4() {
               Review your accused suspects and discovered evidence in the dossier. Write one paragraph explaining your final conclusion of the investigation.
             </p>
 
+            {/* Floating Animated Alert */}
+            <AnimatePresence>
+              {showAlert && (
+                <motion.div
+                  initial={{ opacity: 0, y: -50, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 24, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="fixed top-0 left-1/2 -translate-x-1/2 z-[300] max-w-md w-full px-4"
+                >
+                  <div className="flex items-start gap-4 rounded-2xl border border-red-500/40 bg-red-950/90 p-4 backdrop-blur-md shadow-2xl">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500/10 text-red-500 border border-red-500/20 animate-pulse">
+                      <AlertTriangle className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest font-mono">
+                        Report Incomplete
+                      </p>
+                      <h4 className="text-sm font-semibold text-white mt-0.5">
+                        Missing Analysis
+                      </h4>
+                      <p className="text-xs text-red-200 mt-1 leading-relaxed font-sans">
+                        {message}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowAlert(false)}
+                      className="text-red-400 hover:text-white transition p-1 rounded-lg hover:bg-red-500/10 cursor-pointer"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <form onSubmit={submitAnswer}>
               <label className="mb-2 block text-sm font-medium text-zinc-200">
                 Investigation Paragraph
               </label>
-              <textarea
-                value={answer}
-                onChange={(event) => setAnswer(event.target.value)}
-                rows={9}
-                className="mb-5 w-full resize-none rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-white font-sans text-sm leading-relaxed"
-                placeholder="Write your analysis here..."
-                disabled={isSaving}
-              />
-
-              {message && (
-                <div className="mb-5 rounded-xl border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-200">
-                  {message}
-                </div>
-              )}
+              <motion.div
+                animate={isShaking ? { x: [0, -10, 10, -10, 10, -5, 5, 0] } : { x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="w-full"
+              >
+                <textarea
+                  value={answer}
+                  onChange={(event) => {
+                    setAnswer(event.target.value);
+                    if (event.target.value.trim() && showAlert) {
+                      setShowAlert(false);
+                    }
+                  }}
+                  rows={9}
+                  className={`mb-5 w-full resize-none rounded-xl border ${
+                    isShaking ? "border-red-500 shadow-lg shadow-red-500/20" : "border-zinc-700 focus:border-white"
+                  } bg-zinc-950 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 font-sans text-sm leading-relaxed`}
+                  placeholder="Write your analysis here..."
+                  disabled={isSaving}
+                />
+              </motion.div>
 
               <button
                 type="submit"
