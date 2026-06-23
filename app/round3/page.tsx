@@ -81,7 +81,7 @@ export default function Round3() {
     {
       id: 5,
       name: "Sara Khan",
-      role: "Operations Manager / Actual Killer",
+      role: "Operations Manager",
       image: "/Suspects/suspect1.png",
       gradient: "from-red-600/20 to-zinc-950",
       icon: <Shield className="w-8 h-8 text-purple-400" />,

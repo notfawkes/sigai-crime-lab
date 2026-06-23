@@ -1,136 +1,113 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fallback timer to ensure loading screen goes away even if the video fails to load/play
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 10000); // 10s fallback
+
+    return () => clearTimeout(fallbackTimer);
+  }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#e7e7e7]">
-      {/* LOGO */}
-      <div className="absolute left-8 bottom-16 z-20">
-        <Image
-          src="/SIGAI-logo.png"
-          alt="SIGAI Logo"
-          width={140}
-          height={140}
-          priority
-        />
-      </div>
+    <main className="relative min-h-screen overflow-hidden bg-black text-white select-none">
+      {/* Fullscreen Video Background */}
+      <video
+        src="/videos/Loading-screen.mp4"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        onEnded={() => setIsLoading(false)}
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      />
 
-      {/* CRIME LAB TEXT */}
-      <h1
-        className="
-          absolute
-          top-4
-          left-1/2
-          -translate-x-1/2
-          text-[#d01f5b]
-          uppercase
-          leading-none
-          z-0
-          whitespace-nowrap
-        "
-        style={{
-          fontFamily: "var(--font-league-gothic)",
-          fontSize: "clamp(8rem, 28vw, 30rem)",
-        }}
-      >
-        CRIME LAB
-      </h1>
-
-      {/* HERO IMAGE */}
-      <div
-        className="
-          absolute
-          bottom-0
-          left-1/2
-          -translate-x-1/2
-          z-10
-        "
-      >
-        <Image
-          src="/hero-img.webp"
-          alt="Detective"
-          width={650}
-          height={850}
-          priority
-          className="object-contain"
-        />
-
-        {/* PLAY & LOGIN CONTROLS */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <button
-            onClick={() => router.push("/signup")}
-            className="
-              px-10
-              py-4
-              rounded-full
-              bg-[#d01f5b]
-              text-white
-              font-bold
-              text-2xl
-              tracking-wide
-              transition-all
-              hover:scale-105
-              shadow-xl
-              cursor-pointer
-            "
-            style={{
-              fontFamily: "var(--font-montserrat)",
-            }}
+      {/* Controls & Venue - Fades in over the last frame of the video */}
+      <AnimatePresence>
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, ease: "easeOut" }}
+            className="absolute inset-0 z-10"
           >
-            PLAY NOW
-          </button>
-          <button
-            onClick={() => router.push("/login")}
-            className="
-              text-[#d01f5b]
-              hover:text-black
-              font-bold
-              text-sm
-              tracking-widest
-              transition-all
-              uppercase
-              cursor-pointer
-              mt-1
-            "
-            style={{
-              fontFamily: "var(--font-montserrat)",
-            }}
-          >
-            RETURNING INVESTIGATOR? LOG IN
-          </button>
-        </div>
-      </div>
+            {/* PLAY & LOGIN CONTROLS */}
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+              <button
+                onClick={() => router.push("/signup")}
+                className="
+                  px-10
+                  py-4
+                  rounded-full
+                  bg-[#d01f5b]
+                  text-white
+                  font-bold
+                  text-2xl
+                  tracking-wide
+                  transition-all
+                  hover:scale-105
+                  shadow-xl
+                  cursor-pointer
+                "
+                style={{
+                  fontFamily: "var(--font-montserrat)",
+                }}
+              >
+                PLAY NOW
+              </button>
+              <button
+                onClick={() => router.push("/login")}
+                className="
+                  text-[#d01f5b]
+                  hover:text-white
+                  font-bold
+                  text-sm
+                  tracking-widest
+                  transition-all
+                  uppercase
+                  cursor-pointer
+                  mt-1
+                "
+                style={{
+                  fontFamily: "var(--font-montserrat)",
+                }}
+              >
+                RETURNING INVESTIGATOR? LOG IN
+              </button>
+            </div>
 
-      {/* DATE & VENUE */}
-      <div
-        className="
-          absolute
-          right-24
-          bottom-16
-          text-black
-          font-bold
-          space-y-0
-          z-20
-        "
-        style={{
-          fontFamily: "var(--font-montserrat)",
-        }}
-      >
-        <div className="text-[clamp(2rem,2vw,4rem)]">
-          • DATE: {new Date().toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "2-digit",
-          }).toUpperCase()}
-        </div>
-        <div className="text-[clamp(2rem,2vw,4rem)]">
-          • VENUE: 307/308
-        </div>
-      </div>
+            {/* DATE & VENUE */}
+            <div
+              className="
+                absolute
+                right-24
+                bottom-16
+                text-black
+                font-bold
+                space-y-0
+              "
+              style={{
+                fontFamily: "var(--font-montserrat)",
+              }}
+            >
+              <div className="text-[clamp(2rem,2vw,4rem)]">
+                • DATE: 23 JUN 26
+              </div>
+              <div className="text-[clamp(2rem,2vw,4rem)]">
+                • VENUE: 307/308
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
