@@ -121,7 +121,11 @@ export default function Home() {
         }}
       >
         <div className="text-[clamp(2rem,2vw,4rem)]">
-          • DATE: 17 JUN 26
+          • DATE: {new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+          }).toUpperCase()}
         </div>
         <div className="text-[clamp(2rem,2vw,4rem)]">
           • VENUE: 307/308
