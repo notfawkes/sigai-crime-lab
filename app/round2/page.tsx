@@ -140,7 +140,7 @@ export default function Round2() {
     },
     {
       id: 15,
-      name: "Clue 15",
+      name: "Damaged Hard drive",
       x: 230,
       y: 750,
       width: 40,
