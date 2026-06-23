@@ -25,6 +25,7 @@ export default function Round1() {
 
   // Trigger delayed button appearance to let the shader load/generate
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setButtonVisible(false);
     const timer = setTimeout(() => {
       setButtonVisible(true);
@@ -64,6 +65,10 @@ export default function Round1() {
     {
       image: "/Scenes/Scene7.png",
       text: "A detective arrives to uncover what really happened"
+    },
+    {
+      image: "/round1.jpg",
+      text: "You have to find the clues from the scene. Good Luck!!"
     }
   ];
 
